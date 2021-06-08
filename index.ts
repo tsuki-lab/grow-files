@@ -1,41 +1,19 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import cac from 'cac'
-import { prompt } from 'inquirer'
-import { QUESTIONS } from './constant';
+import execute from './execute';
 
-(async() => {
-  const cli = cac()
+const cli = cac();
 
-  cli.help()
+// TODO: 動的にoutputPathを変更できるように調整した時のオプション
+// cli.option('-o, --output-dir <path>', 'converted file output path', { default: './' });
 
-  cli
-    .option('-o, --output-path [path]', 'converted file output path', {
-      default: './'
-    });
+cli
+  .command('execute [name]', 'Create file for template')
+  .action(async (name, options) => {
+    await execute(name, options)
+  });
 
-  const parsed = cli.parse();
+cli.help();
 
-  const options = {
-    fileName: parsed.args[0],
-    ...parsed.options
-  };
+cli.version('0.0.1');
 
-  await inquirer(options);
-
-  console.log(options);
-  console.log(path.join(__dirname));
-
-  const data = fs.readFileSync('./templates/static-page/sample.html', 'utf-8');
-  const result = data.replace(/\$FILE_NAME/g, options.fileName);
-
-  fs.writeFileSync(`./${options.fileName}.html`, result, 'utf-8');
-})();
-
-async function inquirer(options: any) {
-  if (options.fileName === undefined) {
-    await prompt(QUESTIONS.FILE_NAME).then((answers: any) => {
-      options.fileName = (answers.fileName as string).replace(' ', '');
-    })
-  }
-};
+cli.parse();
