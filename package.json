@@ -2,8 +2,9 @@
   "name": "template-converter",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
+    "dev": "ts-node ./index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,9 +19,8 @@
   },
   "homepage": "https://github.com/tsuki-lab/template-converter#readme",
   "devDependencies": {
-    "ts-node": "^10.0.0"
-  },
-  "dependencies": {
+    "ts-node": "^10.0.0",
     "typescript": "^4.3.2"
-  }
+  },
+  "dependencies": {}
 }
