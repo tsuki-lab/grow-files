@@ -19,8 +19,13 @@
   },
   "homepage": "https://github.com/tsuki-lab/template-converter#readme",
   "devDependencies": {
+    "@types/inquirer": "^7.3.1",
+    "@types/node": "^15.12.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "cac": "^6.7.3",
+    "inquirer": "^8.1.0"
+  }
 }
