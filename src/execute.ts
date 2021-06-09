@@ -86,7 +86,12 @@ function getConvertData(templateDir: string, outputDir: string, fileName: string
 
   return templateNames.reduce((acc, currentName) => {
     const templatePath = path.join(templateDir, currentName);
-    const ext = path.extname(templatePath);
+
+    const templatePathArr = templatePath.split('/');
+    const templateFileName = templatePathArr[templatePathArr.length - 1];
+    const index = templateFileName.indexOf('.');
+    const ext = templateFileName.substring(index);
+
     const data = fs.readFileSync(templatePath, 'utf-8');
 
     acc.push({
