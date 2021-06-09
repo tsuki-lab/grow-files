@@ -1,27 +1,36 @@
 {
-  "name": "template-converter",
-  "version": "1.0.0",
+  "name": "grow-files",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.ts",
+  "main": "./dist/bundle.js",
+  "bin": {
+    "grow-files": "./bin/grow-files.js"
+  },
   "scripts": {
-    "dev": "ts-node ./index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node scripts/build.js",
+    "execute": "node ./bin/grow-files.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tsuki-lab/template-converter.git"
+    "url": "git+https://github.com/tsuki-lab/grow-files.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "file",
+    "template",
+    "convert",
+    "grow"
+  ],
+  "author": "touka hanetsuki",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tsuki-lab/template-converter/issues"
+    "url": "https://github.com/tsuki-lab/grow-files/issues"
   },
-  "homepage": "https://github.com/tsuki-lab/template-converter#readme",
+  "homepage": "https://github.com/tsuki-lab/grow-files#readme",
   "devDependencies": {
     "@types/inquirer": "^7.3.1",
     "@types/node": "^15.12.2",
-    "ts-node": "^10.0.0",
+    "esbuild": "^0.12.7",
+    "esbuild-node-externals": "^1.2.0",
     "typescript": "^4.3.2"
   },
   "dependencies": {

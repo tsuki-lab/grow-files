@@ -1,8 +1,13 @@
-# template converter
+# Grow Files
 
 ## How to use
 
-### execute
+### install package
+```shell
+yarn install
 ```
-yarn dev
+
+### build for prod
+```shell
+yarn build
 ```

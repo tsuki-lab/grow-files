@@ -3,11 +3,11 @@ import execute from './execute';
 
 const cli = cac();
 
-// TODO: 動的にoutputPathを変更できるように調整した時のオプション
-// cli.option('-o, --output-dir <path>', 'converted file output path', { default: './' });
-
 cli
-  .command('execute [name]', 'Create file for template')
+  .command('[name]', 'Create file for template')
+  // TODO: 動的にoutputPathを変更できるように調整した時のオプション
+  // .option('-o, --output-dir <path>', 'converted file output path', { default: './' })
+  .option('-t, --templates-dir <path>', 'Selected templates dir', { default: './templates' })
   .action(async (name, options) => {
     await execute(name, options)
   });

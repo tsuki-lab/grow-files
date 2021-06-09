@@ -6,6 +6,7 @@ type Parameter = {
   outputDir: string;
   fileName: string;
   template: string;
+  templatesDir: string
 };
 
 type OutputFile = {
@@ -64,8 +65,8 @@ export default async (name: string, options: any) => {
     fileName: name
   } as Parameter;
 
-  const templatesDir = path.join(__dirname, 'templates');
-  const templates = getReadDirs(templatesDir);
+  const _templatesDir = path.join(process.cwd(), options.templatesDir);
+  const templates = getReadDirs(_templatesDir);
 
   const questions = [
     options.fileName === undefined && {
@@ -84,7 +85,7 @@ export default async (name: string, options: any) => {
 
   const resultOpts: Parameter = await inquiry(options, questions);
 
-  const templateDir = path.join(templatesDir, resultOpts.template);
+  const templateDir = path.join(_templatesDir, resultOpts.template);
 
   const convertList = getConvertData(templateDir, resultOpts.outputDir, resultOpts.fileName);
 
