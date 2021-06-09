@@ -1,19 +1,33 @@
 import cac from 'cac'
-import execute from './execute';
+import execute, { Options } from './execute';
+import { colors } from './colors';
 
 const cli = cac();
 
 cli
-  .command('[name]', 'Create file for template')
-  // TODO: 動的にoutputPathを変更できるように調整した時のオプション
-  // .option('-o, --output-dir <path>', 'converted file output path', { default: './' })
+  .command('[name]')
+  .option('-o, --output-dir <path>', 'selected outputDir', { default: './' })
   .option('-t, --templates-dir <path>', 'Selected templates dir', { default: './templates' })
-  .action(async (name, options) => {
-    await execute(name, options)
+  .action(async (name, _options) => {
+
+    const options: Options = {
+      templatesDir: _options.templatesDir,
+      template: '',
+      outputDir: _options.outputDir,
+      outputFileName: name
+    };
+
+    console.log(colors.cyan('Options:'));
+    console.log(colors.cyan('- outputDir:', options.outputDir));
+    console.log(colors.cyan('- templatesDir:', options.templatesDir));
+    if (options.outputFileName) console.log(colors.cyan('- outputFileName:', options.outputFileName));
+    console.log('');
+
+    await execute(options);
   });
 
 cli.help();
 
-cli.version('0.0.1');
+cli.version('0.1.0');
 
 cli.parse();

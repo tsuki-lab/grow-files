@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { prompt, QuestionCollection } from 'inquirer'
+import { colors } from './colors';
 
-type Parameter = {
-  outputDir: string;
-  fileName: string;
-  template: string;
+export type Options = {
   templatesDir: string
+  template: string;
+  outputDir: string;
+  outputFileName: string;
 };
 
 type OutputFile = {
@@ -14,13 +15,58 @@ type OutputFile = {
   data: string
 };
 
-async function inquiry(options: any, questions: QuestionCollection) {
-  const cloneOpts = JSON.parse(JSON.stringify(options));
+export default async (options: Options) => {
+
+  const templates = getReadDirs(options.templatesDir);
+
+  const questions = [
+    !options.outputFileName && {
+      type: 'input',
+      message: "What's outputFileName.",
+      name: 'outputFileName',
+      default: 'index'
+    },
+    {
+      type: 'list',
+      name: 'template',
+      message: 'Choose a template.',
+      choices: templates
+    }
+  ].filter(Boolean);
+
+  const resultOpts = await inquiry(options, questions);
+
+  const templateDirPath = path.join(options.templatesDir, resultOpts.template);
+
+  const convertList = getConvertData(templateDirPath, resultOpts.outputDir, resultOpts.outputFileName);
+
+  createDir(convertList);
+
+  console.log(''); // 空間開け
+
+  const existFiles = getExistFiles(convertList);
+  const isExistFiles = 0 < existFiles.length;
+  if (isExistFiles) {
+    const errorMsg = `Error: The file already exists. Please remove ${existFiles.reduce(
+      (acc, crr) => (acc ? `${acc} and "${crr}"` : `"${crr}"`),
+      ''
+    )}.`;
+    console.error(colors.red(errorMsg));
+    process.exit(1);
+  }
+
+  createFiles(convertList);
+}
+
+async function inquiry(options: Options, questions: QuestionCollection) {
+  const clone: Options = JSON.parse(JSON.stringify(options));
+
   await prompt(questions).then((answers: any) => {
-    if (answers.fileName) cloneOpts.fileName = (answers.fileName as string).replace(' ', '');
-    cloneOpts.template = answers.template;
+    if (answers.outputFileName) clone.outputFileName = answers.outputFileName;
+    clone.template = answers.template;
   });
-  return cloneOpts;
+
+  return clone;
 };
 
 function getReadDirs(dir: string) {
@@ -52,42 +98,20 @@ function getConvertData(templateDir: string, outputDir: string, fileName: string
   }, [] as OutputFile[]);
 };
 
+function createDir(list: OutputFile[]) {
+  const outputDirPath = list[0].path.split('/').filter((_, i, arr) => i !== arr.length - 1).join('/');
+  fs.mkdirSync(outputDirPath, { recursive: true });
+}
+
+function getExistFiles(list: OutputFile[]) {
+  return list.map((v) => v.path)
+             .map((path) => fs.existsSync(path) && path)
+             .filter((v) => v);
+}
+
 function createFiles(list: OutputFile[]) {
-  list.forEach((item) => {
-    fs.writeFileSync(item.path, item.data, 'utf-8');
+  list.forEach((file) => {
+    fs.writeFileSync(file.path, file.data, 'utf-8');
+    console.log(colors.green('✨  Create file', file.path))
   });
 };
-
-export default async (name: string, options: any) => {
-  options = {
-    ...options,
-    outputDir: './', // TODO: 動的にoutputPathを変更できるように調整
-    fileName: name
-  } as Parameter;
-
-  const _templatesDir = path.join(process.cwd(), options.templatesDir);
-  const templates = getReadDirs(_templatesDir);
-
-  const questions = [
-    options.fileName === undefined && {
-      type: 'input',
-      message: "What's file name",
-      name: 'fileName',
-      default: 'index'
-    },
-    {
-      type: 'list',
-      name: 'template',
-      message: 'Choose A Template.',
-      choices: templates
-    }
-  ].filter(Boolean);
-
-  const resultOpts: Parameter = await inquiry(options, questions);
-
-  const templateDir = path.join(_templatesDir, resultOpts.template);
-
-  const convertList = getConvertData(templateDir, resultOpts.outputDir, resultOpts.fileName);
-
-  createFiles(convertList);
-}
