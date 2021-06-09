@@ -18,7 +18,8 @@
     "file",
     "template",
     "convert",
-    "grow"
+    "grow",
+    "cli"
   ],
   "author": "touka hanetsuki",
   "license": "MIT",
