@@ -23,7 +23,7 @@ async function inquiry(options: any, questions: QuestionCollection) {
   return cloneOpts;
 };
 
-function getReadDirs(dir:  string) {
+function getReadDirs(dir: string) {
   return fs.readdirSync(dir).filter(filename => {
     const fullPath = path.join(dir, filename);
     const stats = fs.statSync(fullPath);
