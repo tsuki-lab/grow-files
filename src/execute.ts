@@ -105,7 +105,9 @@ function getConvertData(templateDir: string, outputDir: string, fileName: string
 
 function createDir(list: OutputFile[]) {
   const outputDirPath = list[0].path.split('/').filter((_, i, arr) => i !== arr.length - 1).join('/');
-  fs.mkdirSync(outputDirPath, { recursive: true });
+  if (outputDirPath) {
+    fs.mkdirSync(outputDirPath, { recursive: true });
+  }
 }
 
 function getExistFiles(list: OutputFile[]) {
