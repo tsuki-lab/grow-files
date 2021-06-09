@@ -2,29 +2,41 @@
 
 ## How to use
 
-```shell
-grow-files <name>
-# options
-# -t templatesDir (default: ./templates)
-```
-
-### ready template
+### Ready template
 ```shell
 # execute <projectRootDir>
 mkdir templates
 cd templates
-mkdir test
+mkdir <templateName>
 echo 'console.log("Hello $FILE_NAME");' > <templateName>/'$FILE_NAME'.js
 ```
 
-## development
+### Use Glow Files
+```shell
+npx grow-files <name>
+# options
+# -o outputDir (default: ./)
+# -t templatesDir (default: ./templates)
+```
 
-### install package
+## Development
+
+### Install package
 ```shell
 yarn install
 ```
 
-### build for prod
+### Debug
+```shell
+yarn debug
+```
+
+### Build for prod
 ```shell
 yarn build
+```
+
+### Builded Debug
+```shell
+yarn execute
 ```
