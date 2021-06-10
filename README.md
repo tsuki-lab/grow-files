@@ -1,42 +1,131 @@
-# Grow Files
+<br>
+<p align="center">
+<b>Node.js CLI convert and generate tool for template file 🥂</b>
+</p>
 
-## How to use
+# grow-files
+Node.js CLI convert and generate tool for template file
 
-### Ready template
+# Usage
+## Introduction
 ```shell
-# execute <projectRootDir>
-mkdir templates
-cd templates
-mkdir <templateName>
-echo 'console.log("Hello $FILE_NAME");' > <templateName>/'$FILE_NAME'.js
+yarn add -D grow-files
 ```
 
-### Use Glow Files
-```shell
-npx grow-files <name>
-# options
-# -o outputDir (default: ./)
-# -t templatesDir (default: ./templates)
+package.jsonのscriptsにコマンドを記載します。
+```
+"scripts": {
+  "grow-files": "grow-files -t ./templates"
+}
 ```
 
-## Development
+## Prepare the template
+プロジェクトルートに`templates`ディレクトリを作成します。
+（-t オプションの値を変更することでフォルダを指定可能）
 
-### Install package
+今回は、サンプルに`$FILE_NAME.spec.ts`と`$FILE_NAME.ts`を用意しました。
+```
+<projectRootDir>
+┗ templates/
+   ┗ module/
+      ┗ $FILE_NAME.spec.ts
+      ┗ $FILE_NAME.ts
+```
+
+```$FILE_NAME.spec.ts
+import { $FILE_NAME } from './$FILE_NAME';
+
+describe('Test the $FILE_NAME.', () => {
+  test('Test the example method response to undefined.', () => {
+    const resp = $FILE_NAME.example();
+    expect(resp).toBe(undefined);
+  });
+})
+```
+
+```$FILE_NAME.ts
+/**
+ * class methods name: $FILE_NAME
+ *
+ * @export
+ * @class $FILE_NAME
+ */
+export class $FILE_NAME {
+  /**
+   * example class method
+   *
+   * @static
+   * @memberof $FILE_NAME
+   */
+  public static example() {
+
+  };
+}
+```
+
+## Execute
+```shell
+yarn grow-files -o ./src/modules/ StringModule
+
+# templates/ 配下に配置したディレクトリの名前一覧が表示されます。
+# そのうちの一つを選択します。
+? Choose a template.
+```
+
+<img width="727" alt="スクリーンショット 2021-06-09 17 29 50" src="https://user-images.githubusercontent.com/48175599/121461547-09455100-c9ea-11eb-9353-e6949e886c7c.png">
+
+```src/modules/StringModule.spec.ts
+import { StringModule } from './StringModule';
+
+describe('Test the StringModule.', () => {
+  test('Test the example method response to undefined.', () => {
+    const resp = StringModule.example();
+    expect(resp).toBe(undefined);
+  });
+})
+```
+
+```src/modules/StringModule.ts
+/**
+ * class methods name: StringModule
+ *
+ * @export
+ * @class StringModule
+ */
+export class StringModule {
+  /**
+   * example class method
+   *
+   * @static
+   * @memberof StringModule
+   */
+  public static example() {
+
+  };
+}
+```
+
+# Development Commands
+
+## Install package
 ```shell
 yarn install
 ```
 
-### Debug
+## Debug for TypeScript
 ```shell
 yarn debug
 ```
 
-### Build for prod
+## Bundle for prod
 ```shell
 yarn build
 ```
 
-### Builded Debug
+## Debug for Bundled
 ```shell
 yarn execute
 ```
+
+## License
+MIT License © 2021 hanetsuki
