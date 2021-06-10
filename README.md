@@ -72,8 +72,6 @@ yarn grow-files -o ./src/modules/ StringModule
 ? Choose a template.
 ```
 
-<img width="727" alt="スクリーンショット 2021-06-09 17 29 50" src="https://user-images.githubusercontent.com/48175599/121461547-09455100-c9ea-11eb-9353-e6949e886c7c.png">
-
 ```src/modules/StringModule.spec.ts
 import { StringModule } from './StringModule';
 

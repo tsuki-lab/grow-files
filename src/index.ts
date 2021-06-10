@@ -28,6 +28,6 @@ cli
 
 cli.help();
 
-cli.version('0.1.3');
+cli.version('0.1.4');
 
 cli.parse();
