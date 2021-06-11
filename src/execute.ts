@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { prompt, QuestionCollection } from 'inquirer'
+import { prompt, QuestionCollection } from 'inquirer';
 import { colors } from './colors';
 
 export type Options = {
-  templatesDir: string
+  templatesDir: string;
   template: string;
   outputDir: string;
   outputFileName: string;
@@ -12,11 +12,10 @@ export type Options = {
 
 type OutputFile = {
   path: string;
-  data: string
+  data: string;
 };
 
 export default async (options: Options) => {
-
   const templates = getReadDirs(options.templatesDir);
 
   const questions = [
@@ -38,7 +37,11 @@ export default async (options: Options) => {
 
   const templateDirPath = path.join(options.templatesDir, resultOpts.template);
 
-  const convertList = getConvertData(templateDirPath, resultOpts.outputDir, resultOpts.outputFileName);
+  const convertList = getConvertData(
+    templateDirPath,
+    resultOpts.outputDir,
+    resultOpts.outputFileName
+  );
 
   createDir(convertList);
 
@@ -56,7 +59,7 @@ export default async (options: Options) => {
   }
 
   createFiles(convertList);
-}
+};
 
 async function inquiry(options: Options, questions: QuestionCollection) {
   const clone: Options = JSON.parse(JSON.stringify(options));
@@ -67,18 +70,22 @@ async function inquiry(options: Options, questions: QuestionCollection) {
   });
 
   return clone;
-};
+}
 
 function getReadDirs(dir: string) {
-  return fs.readdirSync(dir).filter(filename => {
+  return fs.readdirSync(dir).filter((filename) => {
     const fullPath = path.join(dir, filename);
     const stats = fs.statSync(fullPath);
     return stats.isDirectory();
   });
-};
+}
 
-function getConvertData(templateDir: string, outputDir: string, fileName: string) {
-  const templateNames = fs.readdirSync(templateDir).filter(filename => {
+function getConvertData(
+  templateDir: string,
+  outputDir: string,
+  fileName: string
+) {
+  const templateNames = fs.readdirSync(templateDir).filter((filename) => {
     const fullPath = path.join(templateDir, filename);
     const stats = fs.statSync(fullPath);
     return stats.isFile();
@@ -101,24 +108,28 @@ function getConvertData(templateDir: string, outputDir: string, fileName: string
 
     return acc;
   }, [] as OutputFile[]);
-};
+}
 
 function createDir(list: OutputFile[]) {
-  const outputDirPath = list[0].path.split('/').filter((_, i, arr) => i !== arr.length - 1).join('/');
+  const outputDirPath = list[0].path
+    .split('/')
+    .filter((_, i, arr) => i !== arr.length - 1)
+    .join('/');
   if (outputDirPath) {
     fs.mkdirSync(outputDirPath, { recursive: true });
   }
 }
 
 function getExistFiles(list: OutputFile[]) {
-  return list.map((v) => v.path)
-             .map((path) => fs.existsSync(path) && path)
-             .filter((v) => v);
+  return list
+    .map((v) => v.path)
+    .map((path) => fs.existsSync(path) && path)
+    .filter((v) => v);
 }
 
 function createFiles(list: OutputFile[]) {
   list.forEach((file) => {
     fs.writeFileSync(file.path, file.data, 'utf-8');
-    console.log(colors.green('✨  Create file', file.path))
+    console.log(colors.green('✨  Create file', file.path));
   });
-};
+}
