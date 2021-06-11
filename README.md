@@ -4,15 +4,19 @@
 </p>
 
 # grow-files
+
 Node.js CLI convert and generate tool for template file
 
 # Usage
+
 ## Introduction
+
 ```shell
 yarn add -D grow-files
 ```
 
-package.jsonのscriptsにコマンドを記載します。
+package.json の scripts にコマンドを記載します。
+
 ```
 "scripts": {
   "grow-files": "grow-files -t ./templates"
@@ -20,10 +24,12 @@ package.jsonのscriptsにコマンドを記載します。
 ```
 
 ## Prepare the template
+
 プロジェクトルートに`templates`ディレクトリを作成します。
 （-t オプションの値を変更することでフォルダを指定可能）
 
 今回は、サンプルに`$FILE_NAME.spec.ts`と`$FILE_NAME.ts`を用意しました。
+
 ```
 <projectRootDir>
 ┗ templates/
@@ -64,6 +70,7 @@ export class $FILE_NAME {
 ```
 
 ## Execute
+
 ```shell
 yarn grow-files -o ./src/modules/ StringModule
 
@@ -106,24 +113,29 @@ export class StringModule {
 # Development Commands
 
 ## Install package
+
 ```shell
 yarn install
 ```
 
 ## Debug for TypeScript
+
 ```shell
 yarn debug
 ```
 
 ## Bundle for prod
+
 ```shell
 yarn build
 ```
 
 ## Debug for Bundled
+
 ```shell
 yarn execute
 ```
 
 ## License
+
 MIT License © 2021 hanetsuki
