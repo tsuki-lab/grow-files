@@ -1,4 +1,7 @@
-const color = (col: string) => (...strArr: string[]) => `\u001b[${col}m${strArr.join(' ')}\u001b[0m`;
+const color =
+  (col: string) =>
+  (...strArr: string[]) =>
+    `\u001b[${col}m${strArr.join(' ')}\u001b[0m`;
 
 export const colors = {
   black: color('30'),

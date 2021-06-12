@@ -4,26 +4,28 @@
 </p>
 
 # grow-files
+
 Node.js CLI convert and generate tool for template file
 
-# Usage
-## Introduction
-```shell
+## Usage
+
+```bash
 yarn add -D grow-files
 ```
 
-package.jsonのscriptsにコマンドを記載します。
-```
-"scripts": {
-  "grow-files": "grow-files -t ./templates"
+package.json の scripts にコマンドを記載します。
+
+```json
+{
+  "scripts": {
+    "grow-files": "grow-files -t ./templates"
+  }
 }
 ```
 
-## Prepare the template
 プロジェクトルートに`templates`ディレクトリを作成します。
 （-t オプションの値を変更することでフォルダを指定可能）
 
-今回は、サンプルに`$FILE_NAME.spec.ts`と`$FILE_NAME.ts`を用意しました。
 ```
 <projectRootDir>
 ┗ templates/
@@ -32,7 +34,9 @@ package.jsonのscriptsにコマンドを記載します。
       ┗ $FILE_NAME.ts
 ```
 
-```$FILE_NAME.spec.ts
+```ts
+// templates/module/$FILE_NAME.spec.ts
+
 import { $FILE_NAME } from './$FILE_NAME';
 
 describe('Test the $FILE_NAME.', () => {
@@ -40,10 +44,12 @@ describe('Test the $FILE_NAME.', () => {
     const resp = $FILE_NAME.example();
     expect(resp).toBe(undefined);
   });
-})
+});
 ```
 
-```$FILE_NAME.ts
+```ts
+// templates/module/$FILE_NAME.ts
+
 /**
  * class methods name: $FILE_NAME
  *
@@ -57,14 +63,13 @@ export class $FILE_NAME {
    * @static
    * @memberof $FILE_NAME
    */
-  public static example() {
-
-  };
+  public static example() {}
 }
 ```
 
-## Execute
-```shell
+実行コマンド
+
+```bash
 yarn grow-files -o ./src/modules/ StringModule
 
 # templates/ 配下に配置したディレクトリの名前一覧が表示されます。
@@ -72,7 +77,9 @@ yarn grow-files -o ./src/modules/ StringModule
 ? Choose a template.
 ```
 
-```src/modules/StringModule.spec.ts
+```ts
+// src/modules/StringModule.spec.ts
+
 import { StringModule } from './StringModule';
 
 describe('Test the StringModule.', () => {
@@ -80,10 +87,12 @@ describe('Test the StringModule.', () => {
     const resp = StringModule.example();
     expect(resp).toBe(undefined);
   });
-})
+});
 ```
 
-```src/modules/StringModule.ts
+```ts
+// src/modules/StringModule.ts
+
 /**
  * class methods name: StringModule
  *
@@ -97,33 +106,10 @@ export class StringModule {
    * @static
    * @memberof StringModule
    */
-  public static example() {
-
-  };
+  public static example() {}
 }
 ```
 
-# Development Commands
-
-## Install package
-```shell
-yarn install
-```
-
-## Debug for TypeScript
-```shell
-yarn debug
-```
-
-## Bundle for prod
-```shell
-yarn build
-```
-
-## Debug for Bundled
-```shell
-yarn execute
-```
-
 ## License
+
 MIT License © 2021 hanetsuki
