@@ -31,6 +31,6 @@ cli
 
 cli.help();
 
-cli.version('0.1.4');
+cli.version('0.1.5');
 
 cli.parse();
