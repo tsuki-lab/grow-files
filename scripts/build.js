@@ -1,5 +1,6 @@
-import { build } from 'esbuild';
-import { nodeExternalsPlugin } from 'esbuild-node-externals';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { build } = require('esbuild');
+const { nodeExternalsPlugin } = require('esbuild-node-externals');
 
 void build({
   entryPoints: ['src/index.ts'],
