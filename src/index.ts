@@ -10,7 +10,7 @@ cli
   .option('-t, --templates-dir <path>', 'Selected templates dir', {
     default: './templates'
   })
-  .action(async (name, _options) => {
+  .action(async (name: string, _options: Record<string, string>) => {
     const options: Options = {
       templatesDir: _options.templatesDir,
       template: '',
@@ -21,8 +21,9 @@ cli
     console.log(colors.cyan('Options:'));
     console.log(colors.cyan('- outputDir:', options.outputDir));
     console.log(colors.cyan('- templatesDir:', options.templatesDir));
-    if (options.outputFileName)
+    if (options.outputFileName) {
       console.log(colors.cyan('- outputFileName:', options.outputFileName));
+    }
     console.log('');
 
     await execute(options);
