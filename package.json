@@ -7,7 +7,7 @@
     "grow-files": "./bin/grow-files.js"
   },
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "ts-node ./scripts/build.ts",
     "execute": "node ./bin/grow-files.js",
     "debug": "ts-node ./src/index.ts",
     "fix": "run-s fix:eslint fix:prettier",
