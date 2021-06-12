@@ -1,7 +1,7 @@
-const { build } = require('esbuild');
-const { nodeExternalsPlugin } = require('esbuild-node-externals');
+import { build } from 'esbuild';
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
-build({
+void build({
   entryPoints: ['src/index.ts'],
   outfile: 'dist/bundle.js',
   platform: 'node',

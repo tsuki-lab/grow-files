@@ -15,7 +15,7 @@ type OutputFile = {
   data: string;
 };
 
-export default async (options: Options) => {
+export default async (options: Options): Promise<void> => {
   const templates = getReadDirs(options.templatesDir);
 
   const questions = [
@@ -50,10 +50,9 @@ export default async (options: Options) => {
   const existFiles = getExistFiles(convertList);
   const isExistFiles = 0 < existFiles.length;
   if (isExistFiles) {
-    const errorMsg = `Error: The file already exists. Please remove ${existFiles.reduce(
-      (acc, crr) => (acc ? `${acc} and "${crr}"` : `"${crr}"`),
-      ''
-    )}.`;
+    const files = existFiles.filter(Boolean);
+    const filesStr = files.join(' and ');
+    const errorMsg = `Error: The file already exists. Please remove ${filesStr}.`;
     console.error(colors.red(errorMsg));
     process.exit(1);
   }
@@ -62,11 +61,13 @@ export default async (options: Options) => {
 };
 
 async function inquiry(options: Options, questions: QuestionCollection) {
-  const clone: Options = JSON.parse(JSON.stringify(options));
+  const clone = JSON.parse(JSON.stringify(options)) as Options;
 
-  await prompt(questions).then((answers: any) => {
-    if (answers.outputFileName) clone.outputFileName = answers.outputFileName;
-    clone.template = answers.template;
+  await prompt(questions).then((answers) => {
+    if (answers.outputFileName) {
+      clone.outputFileName = answers.outputFileName as string;
+    }
+    clone.template = answers.template as string;
   });
 
   return clone;
