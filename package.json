@@ -1,6 +1,6 @@
 {
   "name": "grow-files",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "",
   "main": "./dist/bundle.js",
   "bin": {

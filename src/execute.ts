@@ -1,30 +1,20 @@
-import * as fs from 'fs';
 import * as path from 'path';
 import { prompt, QuestionCollection } from 'inquirer';
 import { colors } from './colors';
-
-export type Options = {
-  templatesDir: string;
-  template: string;
-  outputDir: string;
-  outputFileName: string;
-};
-
-type OutputFile = {
-  path: string;
-  data: string;
-};
+import { Options } from './interface';
+import { Utils } from './utils';
 
 export default async (options: Options): Promise<void> => {
-  const templates = getReadDirs(options.templatesDir);
+  const templates = Utils.getDirInnerContentNames(options.templatesDir, 'dir');
+
+  if (templates.length < 1) {
+    console.error(
+      colors.red('Error: Template does not exist from', options.templatesDir)
+    );
+    process.exit(1);
+  }
 
   const questions = [
-    !options.outputFileName && {
-      type: 'input',
-      message: "What's outputFileName.",
-      name: 'outputFileName',
-      default: 'index'
-    },
     {
       type: 'list',
       name: 'template',
@@ -33,21 +23,22 @@ export default async (options: Options): Promise<void> => {
     }
   ].filter(Boolean);
 
+  // 対話式質問の実行
   const resultOpts = await inquiry(options, questions);
 
   const templateDirPath = path.join(options.templatesDir, resultOpts.template);
 
-  const convertList = getConvertData(
+  const convertList = Utils.getConvertData(
     templateDirPath,
     resultOpts.outputDir,
     resultOpts.outputFileName
   );
 
-  createDir(convertList);
+  Utils.createDir(convertList[0].path);
 
-  console.log(''); // 空間開け
-
-  const existFiles = getExistFiles(convertList);
+  const existFiles = convertList
+    .map((v) => Utils.existsContent(v.path))
+    .filter(Boolean) as string[];
   const isExistFiles = 0 < existFiles.length;
   if (isExistFiles) {
     const files = existFiles.filter(Boolean);
@@ -57,80 +48,25 @@ export default async (options: Options): Promise<void> => {
     process.exit(1);
   }
 
-  createFiles(convertList);
+  Utils.createFiles(convertList);
 };
 
-async function inquiry(options: Options, questions: QuestionCollection) {
+/**
+ * 対話式質問
+ *
+ * @param {Options} options
+ * @param {QuestionCollection} questions
+ * @return {*}
+ */
+async function inquiry(
+  options: Options,
+  questions: QuestionCollection
+): Promise<Options> {
   const clone = JSON.parse(JSON.stringify(options)) as Options;
 
   await prompt(questions).then((answers) => {
-    if (answers.outputFileName) {
-      clone.outputFileName = answers.outputFileName as string;
-    }
     clone.template = answers.template as string;
   });
 
   return clone;
-}
-
-function getReadDirs(dir: string) {
-  return fs.readdirSync(dir).filter((filename) => {
-    const fullPath = path.join(dir, filename);
-    const stats = fs.statSync(fullPath);
-    return stats.isDirectory();
-  });
-}
-
-function getConvertData(
-  templateDir: string,
-  outputDir: string,
-  fileName: string
-) {
-  const templateNames = fs.readdirSync(templateDir).filter((filename) => {
-    const fullPath = path.join(templateDir, filename);
-    const stats = fs.statSync(fullPath);
-    return stats.isFile();
-  });
-
-  return templateNames.reduce((acc, currentName) => {
-    const templatePath = path.join(templateDir, currentName);
-
-    const templatePathArr = templatePath.split('/');
-    const templateFileName = templatePathArr[templatePathArr.length - 1];
-    const index = templateFileName.indexOf('.');
-    const ext = templateFileName.substring(index);
-
-    const data = fs.readFileSync(templatePath, 'utf-8');
-
-    acc.push({
-      path: path.join(outputDir, fileName + ext),
-      data: data.replace(/\$FILE_NAME/g, fileName)
-    });
-
-    return acc;
-  }, [] as OutputFile[]);
-}
-
-function createDir(list: OutputFile[]) {
-  const outputDirPath = list[0].path
-    .split('/')
-    .filter((_, i, arr) => i !== arr.length - 1)
-    .join('/');
-  if (outputDirPath) {
-    fs.mkdirSync(outputDirPath, { recursive: true });
-  }
-}
-
-function getExistFiles(list: OutputFile[]) {
-  return list
-    .map((v) => v.path)
-    .map((path) => fs.existsSync(path) && path)
-    .filter((v) => v);
-}
-
-function createFiles(list: OutputFile[]) {
-  list.forEach((file) => {
-    fs.writeFileSync(file.path, file.data, 'utf-8');
-    console.log(colors.green('✨  Create file', file.path));
-  });
 }

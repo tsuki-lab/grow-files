@@ -9,33 +9,29 @@ Node.js CLI convert and generate tool for template file
 
 ## Usage
 
+### Set up
+
 ```bash
-yarn add -D grow-files
+npm install -g grow-files
+grow-files <path>
+
+# Create if not
+# ✨  Created TemplatesDir!! Let's create a template in the created directory. - <HomeDir>/.grow-files/templates
 ```
 
-package.json の scripts にコマンドを記載します。
-
-```json
-{
-  "scripts": {
-    "grow-files": "grow-files -t ./templates"
-  }
-}
-```
-
-プロジェクトルートに`templates`ディレクトリを作成します。
-（-t オプションの値を変更することでフォルダを指定可能）
+Create `template` _HomeDir_/.grow-files/templates
 
 ```
-<projectRootDir>
-┗ templates/
-   ┗ module/
+<HomeDir>
+┗ .grow-files
+  ┗ templates
+    ┗ module
       ┗ $FILE_NAME.spec.ts
       ┗ $FILE_NAME.ts
 ```
 
 ```ts
-// templates/module/$FILE_NAME.spec.ts
+// HomeDir/.grow-files/templates/module/$FILE_NAME.spec.ts
 
 import { $FILE_NAME } from './$FILE_NAME';
 
@@ -48,7 +44,7 @@ describe('Test the $FILE_NAME.', () => {
 ```
 
 ```ts
-// templates/module/$FILE_NAME.ts
+// HomeDir/.grow-files/templates/module/$FILE_NAME.ts
 
 /**
  * class methods name: $FILE_NAME
@@ -67,10 +63,11 @@ export class $FILE_NAME {
 }
 ```
 
-実行コマンド
+### Execute
 
 ```bash
-yarn grow-files -o ./src/modules/ StringModule
+grow-files ./src/modules/StringModule
+# grow-files <path>
 
 # templates/ 配下に配置したディレクトリの名前一覧が表示されます。
 # そのうちの一つを選択します。
